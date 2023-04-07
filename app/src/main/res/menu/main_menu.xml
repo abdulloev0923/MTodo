@@ -4,9 +4,19 @@
 
     <item
         android:title="DeleteAll"
-        app:showAsAction="always"
+        app:showAsAction="never"
         android:icon="@drawable/baseline_delete_24"
         android:id="@+id/DeleteAll"
+        >
+
+    </item>
+    <item
+        android:title=""
+        android:icon="@drawable/baseline_search_24"
+        android:id="@+id/search_view"
+        android:iconTint="@color/white"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always"
         >
 
     </item>

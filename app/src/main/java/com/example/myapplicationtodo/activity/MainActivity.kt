@@ -4,9 +4,11 @@ import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -56,26 +58,6 @@ class MainActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
 
-//                    mAdapter?.setOnActionDeleteListener {
-//                        val builder = AlertDialog.Builder(this@MainActivity)
-//                        builder.setMessage("Are you sure you want to delete?")
-//                        builder.setPositiveButton("Yes"){p0,p1->
-//                            lifecycleScope.launch {
-//                                TodoDatabase(this@MainActivity).getTodoDao().deleteTodo(it)
-//                                val list = TodoDatabase(this@MainActivity).getTodoDao().getAllTodo()
-//                                setAdapter(list)
-//                            }
-//                            p0.dismiss()
-//
-//                        }
-//                        builder.setNegativeButton("No"){ p0, p1->
-//
-//                            p0.dismiss()
-//
-//                        }
-//
-//                       builder.create().show()
-//                }
 
 
 
@@ -112,43 +94,33 @@ class MainActivity : AppCompatActivity() {
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallBack)
         itemTouchHelper.attachToRecyclerView(binding.recyclerview)
 
-        binding.searchview.setOnQueryTextListener(
-            object :SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(p0: String?): Boolean {
-                    if(p0 != null){
-                        searchDatabase(p0)
-                    }
-                    return true
-                }
-
-                override fun onQueryTextChange(p0: String?): Boolean {
-                    if(p0 != null){
-                        searchDatabase(p0)
-                    }
-                    return true
-                }
-            }
-        )
-
-
+//        binding.searchview.setOnQueryTextListener(
+//            object :SearchView.OnQueryTextListener{
+//                override fun onQueryTextSubmit(p0: String?): Boolean {
+//                    if(p0 != null){
+//                        searchDatabase(p0)
+//                    }
+//                    return true
+//                }
+//
+//                override fun onQueryTextChange(p0: String?): Boolean {
+//                    if(p0 != null){
+//                        searchDatabase(p0)
+//                    }
+//                    return true
+//                }
+//            }
+//        )
 
 
 
 
 
-    }
-
-    private fun searchDatabase(query:String) {
-        lifecycleScope.launch {
-        var searchView = "%$query%"
-            val list = TodoDatabase(this@MainActivity).getTodoDao().search(searchView)
-                list.let {list ->
-                    mAdapter?.setData(list)
-                }
 
 
     }
-    }
+
+
 
 
     fun setAdapter(list: List<Todo>) {
@@ -158,14 +130,36 @@ class MainActivity : AppCompatActivity() {
   
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
+        val search = menu.findItem(R.id.search_view)
+        val searchView = search.actionView as? SearchView
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+
+                return true
+
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+
+                p0?.let {
+                    searchDatabase(it)
+                    Log.e("onQueryTextSubmit", "onQueryTextSubmit: $it")
+                }
+
+                return true
+
+            }
+        })
+       return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
+
             R.id.DeleteAll -> {
                 val builder = AlertDialog.Builder(this)
 
@@ -192,6 +186,17 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun searchDatabase(query:String) {
+        lifecycleScope.launch {
+            var searchView = "%$query%"
+            val list = TodoDatabase(this@MainActivity).getTodoDao().search(searchView)
+            list.let {list ->
+                mAdapter?.setData(list)
+            }
+
+
+        }
+    }
 
 
 }
