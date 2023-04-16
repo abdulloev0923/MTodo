@@ -15,10 +15,32 @@
         android:icon="@drawable/baseline_search_24"
         android:id="@+id/search_view"
         android:iconTint="@color/white"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always|collapseActionView"
         >
 
     </item>
+    <item android:id="@+id/priority_menu"
+        app:showAsAction="never"
+        android:title="Sort by Priority">
+<menu>
+    <item
+        android:title="High Priority"
+        android:id="@+id/high"
+        app:showAsAction="never"/>
+    <item
+        android:title="Medium Priority"
+        android:id="@+id/medium"
+        app:showAsAction="never"/>
+    <item
+        android:title="Low Priority"
+        android:id="@+id/low"
+        app:showAsAction="never"/>
+
+
+
+</menu>
+    </item>
+
 
 </menu>

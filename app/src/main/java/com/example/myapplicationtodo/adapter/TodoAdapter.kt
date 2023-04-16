@@ -17,6 +17,7 @@ class TodoAdapter: RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
         var title: TextView = itemview.findViewById(R.id.tv_title)
         var description: TextView = itemview.findViewById(R.id.tv_description)
         var priority:ImageView = itemview.findViewById(R.id.iv_priority)
+        var date:TextView = itemview.findViewById(R.id.date)
         val actionEdit = itemview.findViewById<androidx.cardview.widget.CardView>(R.id.relative)
 //        val actionDelete = itemview.findViewById<ImageView>(R.id.action_delete)
     }
@@ -35,11 +36,12 @@ class TodoAdapter: RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
         val todoList = list[position]
         holder.title.text = todoList.title
         holder.description.text = todoList.description
-        if (todoList.priority == "High priority"){
+        holder.date.text = todoList.date
+        if (todoList.priority == 1){
             holder.priority.setImageResource(R.color.red)
-        }else if (todoList.priority == "Medium priority"){
+        }else if (todoList.priority == 2){
             holder.priority.setImageResource(R.color.orange)
-        }else if (todoList.priority == "Low priority"){
+        }else if (todoList.priority == 3){
             holder.priority.setImageResource(R.color.green)
         }
 

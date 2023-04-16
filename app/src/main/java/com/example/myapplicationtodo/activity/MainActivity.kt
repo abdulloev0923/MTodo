@@ -47,11 +47,14 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val todoList = TodoDatabase(this@MainActivity).getTodoDao().getAllTodo()
+
+
             mAdapter = TodoAdapter()
             binding.recyclerview.apply {
                 layoutManager = GridLayoutManager(this@MainActivity, 2)
                 adapter = mAdapter.apply {
                     setAdapter(todoList)
+
                     mAdapter?.setOnActionEditListener {
                         val intent = Intent(this@MainActivity, UpdateActivity::class.java)
                         intent.putExtra("Data", it)
@@ -77,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                 lifecycleScope.launch(Dispatchers.Main) {
                     val position = viewHolder.adapterPosition
                     val list = TodoDatabase(this@MainActivity).getTodoDao().getAllTodo().toMutableList()
+
                     TodoDatabase(this@MainActivity).getTodoDao()
                         .deleteTodo(list[position])
                     list.removeAt(position)
@@ -135,6 +139,7 @@ class MainActivity : AppCompatActivity() {
         val search = menu.findItem(R.id.search_view)
         val searchView = search.actionView as? SearchView
         searchView?.isSubmitButtonEnabled = true
+        searchView?.queryHint = "Search..."
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
 
@@ -159,6 +164,40 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
+            R.id.high ->{
+                lifecycleScope.launch {
+                    val list =
+                        TodoDatabase(this@MainActivity).getTodoDao().getAllTodo().toMutableList()
+                    list.sortBy {
+                        it.priority
+                    }
+                    setAdapter(list)
+                }
+            }
+            R.id.medium ->{
+                lifecycleScope.launch {
+                    val list =
+                        TodoDatabase(this@MainActivity).getTodoDao().getAllTodo().toMutableList()
+                    list.sortBy {
+                        it.priority.and(1)
+                    }
+
+                    setAdapter(list)
+                }
+            }
+            R.id.low ->{
+                lifecycleScope.launch {
+                    val list =
+                        TodoDatabase(this@MainActivity).getTodoDao().getAllTodo().toMutableList()
+
+
+                    val listComparator = Comparator{p1:Todo , p2:Todo -> p2.priority - p1.priority}
+                    list.sortWith(listComparator)
+
+                    setAdapter(list)
+                }
+            }
+
 
             R.id.DeleteAll -> {
                 val builder = AlertDialog.Builder(this)
@@ -188,10 +227,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun searchDatabase(query:String) {
         lifecycleScope.launch {
-            var searchView = "%$query%"
+            val searchView = "%$query%"
             val list = TodoDatabase(this@MainActivity).getTodoDao().search(searchView)
-            list.let {list ->
-                mAdapter?.setData(list)
+            list.let {
+                mAdapter?.setData(it)
             }
 
 
