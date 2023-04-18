@@ -1,17 +1,14 @@
 package com.example.myapplicationtodo.activity
 
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.example.myapplicationtodo.R
 import com.example.myapplicationtodo.adapter.TodoAdapter
@@ -26,7 +23,7 @@ class UpdateActivity : AppCompatActivity() {
     lateinit var binding: ActivityUpdateBinding
     private var todo: Todo? = null
     private var mAdapter: TodoAdapter? = null
-    lateinit var spinner_update: Spinner
+    lateinit var spinner_update: AutoCompleteTextView
     lateinit var priority_update:Array<String>
     private var my_priority_update:Int = 0
     private var priority_text_update:String? = null
@@ -59,9 +56,10 @@ class UpdateActivity : AppCompatActivity() {
 
         spinner_update.setAdapter(my_adapters_spiiner)
 
-        spinner_update.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                priority_text_update = (p0?.getItemAtPosition(p2) as CharSequence?).toString()
+        spinner_update.onItemClickListener = AdapterView.OnItemClickListener{parent, arg1, pos,id ->
+
+                priority_text_update = (parent?.getItemAtPosition(pos) as CharSequence?).toString()
+
                 if (priority_text_update == "High priority"){
                     my_priority_update = 1
                 }
@@ -72,13 +70,9 @@ class UpdateActivity : AppCompatActivity() {
                     my_priority_update = 3
                 }
                 else{
-                    my_priority_update = 0
+                    Toast.makeText(this, "Пожалуйста выберите статус заметки", Toast.LENGTH_SHORT).show()
                 }
-            }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
         }
 
 
@@ -94,19 +88,27 @@ class UpdateActivity : AppCompatActivity() {
         val title = binding.titleUpdate.text.toString()
         val description = binding.descriptionUpdate.text.toString()
         val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
+        val formatter = DateTimeFormatter.ofPattern("dd.MM. HH:mm")
         val date = current.format(formatter)
 
         lifecycleScope.launch {
-            val todos = Todo(title, description, priority = my_priority_update, date = date)
-//            Toast.makeText(this@UpdateActivity, "$todos", Toast.LENGTH_SHORT).show()
-            todos.id = todo?.id ?: 0
-            TodoDatabase(this@UpdateActivity).getTodoDao().updateTodo(todos)
+            if (my_priority_update == 0) {
+                Toast.makeText(
+                    this@UpdateActivity,
+                    "Пожалуйста выберите статус заметки",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val todos = Todo(title, description, priority = my_priority_update, date = date)
 
-            val intent = Intent(this@UpdateActivity, MainActivity::class.java)
-            startActivity(intent)
+                todos.id = todo?.id ?: 0
+                TodoDatabase(this@UpdateActivity).getTodoDao().updateTodo(todos)
 
-            Toast.makeText(this@UpdateActivity, "Successful updated", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@UpdateActivity, MainActivity::class.java)
+                startActivity(intent)
+
+                Toast.makeText(this@UpdateActivity, "Successful updated", Toast.LENGTH_SHORT).show()
+            }
         }
 
     }

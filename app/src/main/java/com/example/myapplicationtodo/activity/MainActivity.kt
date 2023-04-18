@@ -219,6 +219,28 @@ class MainActivity : AppCompatActivity() {
                 val dialog = builder.create()
                 dialog.show()
             }
+
+
+            R.id.sort_date_new ->{
+                lifecycleScope.launch() {
+                    val list = TodoDatabase(this@MainActivity).getTodoDao().getAllTodo().toTypedArray()
+
+
+
+                }
+            }
+            R.id.sort_date_starie ->{
+                lifecycleScope.launch {
+                    val list =
+                        TodoDatabase(this@MainActivity).getTodoDao().getAllTodo().toMutableList()
+                    list.sortBy {
+                        it.date
+                    }
+
+                    setAdapter(list)
+                }
+            }
+
         }
 
         return super.onOptionsItemSelected(item)
