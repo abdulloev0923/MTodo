@@ -42,24 +42,7 @@
 </menu>
     </item>
 
-    <item
-        android:title="Sort by date"
-        app:showAsAction="never">
-        <menu>
-            <item
-                android:title="Сначала новые"
-                android:id="@+id/sort_date_new"
-                app:showAsAction="never"
-                />
-            <item
-                android:title="Сначала старые"
-                android:id="@+id/sort_date_starie"
-                app:showAsAction="never"
-                />
 
-        </menu>
-
-    </item>
 
 
 </menu>
