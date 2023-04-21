@@ -13,5 +13,11 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+        <style name="MY_STYLE">
+            <item name="android:backgroundTint">#03A9F4</item>
+
+
+        </style>
+
 
 </resources>

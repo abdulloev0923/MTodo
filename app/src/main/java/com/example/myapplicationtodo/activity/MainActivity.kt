@@ -8,8 +8,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
-import android.widget.Toast
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -21,7 +19,6 @@ import com.example.myapplicationtodo.data.TodoDatabase
 import com.example.myapplicationtodo.databinding.ActivityMainBinding
 import com.example.myapplicationtodo.swipe.Swipe
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -164,6 +161,10 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
+            R.id.info ->{
+                val intent = Intent(this@MainActivity, InfoActivity::class.java)
+                startActivity(intent)
+            }
             R.id.high ->{
                 lifecycleScope.launch {
                     val list =

@@ -12,6 +12,9 @@
         android:theme="@style/Theme.MyApplicationTodo"
         tools:targetApi="31">
         <activity
+            android:name=".activity.InfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.UpdateActivity"
             android:exported="false" />
         <activity

@@ -20,6 +20,12 @@
         >
 
     </item>
+    <item
+        android:id="@+id/info"
+        android:iconTint="#03A9F4"
+        app:showAsAction="always"
+        android:icon="@drawable/baseline_info_24"
+        android:title="Info"/>
     <item android:id="@+id/priority_menu"
         app:showAsAction="never"
         android:title="Sort by Priority">
